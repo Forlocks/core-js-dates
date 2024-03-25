@@ -17,8 +17,8 @@
  * '01 Jan 1970 00:00:00 UTC' => 0
  * '04 Dec 1995 00:12:00 UTC' => 818035920000
  */
-function dateToTimestamp(/* date */) {
-  throw new Error('Not implemented');
+function dateToTimestamp(date) {
+  return Date.parse(date);
 }
 
 /**
@@ -31,8 +31,21 @@ function dateToTimestamp(/* date */) {
  * Date(2023, 5, 1, 8, 20, 55) => '08:20:55'
  * Date(2015, 10, 20, 23, 15, 1) => '23:15:01'
  */
-function getTime(/* date */) {
-  throw new Error('Not implemented');
+function getTime(date) {
+  const hours =
+    date.getHours() < 10
+      ? `0${String(date.getHours())}`
+      : String(date.getHours());
+  const minutes =
+    date.getMinutes() < 10
+      ? `0${String(date.getMinutes())}`
+      : String(date.getMinutes());
+  const seconds =
+    date.getSeconds() < 10
+      ? `0${String(date.getSeconds())}`
+      : String(date.getSeconds());
+
+  return `${hours}:${minutes}:${seconds}`;
 }
 
 /**
@@ -46,8 +59,18 @@ function getTime(/* date */) {
  * '03 Dec 1995 00:12:00 UTC' => 'Sunday'
  * '2024-01-30T00:00:00.000Z' => 'Tuesday'
  */
-function getDayName(/* date */) {
-  throw new Error('Not implemented');
+function getDayName(date) {
+  const days = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ];
+
+  return days[new Date(date).getDay()];
 }
 
 /**
@@ -61,8 +84,13 @@ function getDayName(/* date */) {
  * Date('2024-02-13T00:00:00Z') => Date('2024-02-16T00:00:00Z')
  * Date('2024-02-16T00:00:00Z') => Date('2024-02-23T00:00:00Z')
  */
-function getNextFriday(/* date */) {
-  throw new Error('Not implemented');
+function getNextFriday(date) {
+  const day = date.getDay();
+  const newDay = (5 - day + 7) % 7;
+
+  date.setDate(date.getDate() + newDay + (newDay <= 0 ? 7 : 0));
+
+  return date;
 }
 
 /**
@@ -76,8 +104,18 @@ function getNextFriday(/* date */) {
  * 1, 2024 => 31
  * 2, 2024 => 29
  */
-function getCountDaysInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountDaysInMonth(month, year) {
+  let result;
+  const daysCount = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  const monthIndex = month - 1;
+
+  if (year % 4 === 0 && month === 2) {
+    result = 29;
+  } else {
+    result = daysCount[monthIndex];
+  }
+
+  return result;
 }
 
 /**
@@ -91,8 +129,12 @@ function getCountDaysInMonth(/* month, year */) {
  * '2024-02-01T00:00:00.000Z', '2024-02-02T00:00:00.000Z'  => 2
  * '2024-02-01T00:00:00.000Z', '2024-02-12T00:00:00.000Z'  => 12
  */
-function getCountDaysOnPeriod(/* dateStart, dateEnd */) {
-  throw new Error('Not implemented');
+function getCountDaysOnPeriod(dateStart, dateEnd) {
+  const start = new Date(dateStart);
+  const end = new Date(dateEnd);
+  const milliseconds = end - start;
+
+  return milliseconds / (1000 * 60 * 60 * 24) + 1;
 }
 
 /**
@@ -112,8 +154,12 @@ function getCountDaysOnPeriod(/* dateStart, dateEnd */) {
  * '2024-02-02', { start: '2024-02-02', end: '2024-03-02' } => true
  * '2024-02-10', { start: '2024-02-02', end: '2024-03-02' } => true
  */
-function isDateInPeriod(/* date, period */) {
-  throw new Error('Not implemented');
+function isDateInPeriod(date, period) {
+  const current = new Date(date);
+  const start = new Date(period.start);
+  const end = new Date(period.end);
+
+  return current >= start && current <= end;
 }
 
 /**
@@ -127,8 +173,24 @@ function isDateInPeriod(/* date, period */) {
  * '1999-01-05T02:20:00.000Z' => '1/5/1999, 2:20:00 AM'
  * '2010-12-15T22:59:00.000Z' => '12/15/2010, 10:59:00 PM'
  */
-function formatDate(/* date */) {
-  throw new Error('Not implemented');
+function formatDate(date) {
+  const realDate = new Date(date);
+  const month = realDate.getUTCMonth() + 1;
+  const day = realDate.getUTCDate();
+  const year = realDate.getUTCFullYear();
+  let hour = realDate.getUTCHours();
+  const minute = realDate.getUTCMinutes() < 10 ? '0' + String(realDate.getUTCMinutes()) : realDate.getUTCMinutes();
+  const second = realDate.getUTCSeconds() < 10 ? '0' + String(realDate.getUTCSeconds()) : realDate.getUTCSeconds();
+
+  const half = hour >= 12 ? 'PM' : 'AM';
+
+  if (hour === 0) {
+    hour = 12;
+  } else if (hour > 12) {
+    hour -= 12;
+  }
+
+  return `${month}/${day}/${year}, ${hour}:${minute}:${second} ${half}`;
 }
 
 /**
