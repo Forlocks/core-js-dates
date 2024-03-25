@@ -179,8 +179,14 @@ function formatDate(date) {
   const day = realDate.getUTCDate();
   const year = realDate.getUTCFullYear();
   let hour = realDate.getUTCHours();
-  const minute = realDate.getUTCMinutes() < 10 ? '0' + String(realDate.getUTCMinutes()) : realDate.getUTCMinutes();
-  const second = realDate.getUTCSeconds() < 10 ? '0' + String(realDate.getUTCSeconds()) : realDate.getUTCSeconds();
+  const minute =
+    realDate.getUTCMinutes() < 10
+      ? `0${String(realDate.getUTCMinutes())}`
+      : realDate.getUTCMinutes();
+  const second =
+    realDate.getUTCSeconds() < 10
+      ? `0${String(realDate.getUTCSeconds())}`
+      : realDate.getUTCSeconds();
 
   const half = hour >= 12 ? 'PM' : 'AM';
 
